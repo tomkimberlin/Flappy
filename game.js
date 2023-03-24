@@ -32,7 +32,7 @@ function preload() {
 }
 
 function create() {
-    bird = this.physics.add.sprite(100, 250, 'bird').setScale(0.1);
+    bird = this.physics.add.sprite(100, 250, 'bird').setScale(1);
     bird.setCollideWorldBounds(true);
 
     pipes = this.physics.add.group();
