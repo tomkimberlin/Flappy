@@ -1,7 +1,7 @@
 const config = {
     type: Phaser.AUTO,
-    width: 400,
-    height: 600,
+    width: window.innerWidth,
+    height: window.innerHeight,
     backgroundColor: '#70c5ce',
     physics: {
         default: 'arcade',
@@ -16,6 +16,10 @@ const config = {
         update: update,
     },
 };
+
+window.addEventListener('resize', () => {
+    game.scale.resize(window.innerWidth, window.innerHeight);
+});
 
 const game = new Phaser.Game(config);
 let bird;
@@ -49,17 +53,29 @@ function update() {
 }
 
 function addPipes() {
-    const pipeHeight = Phaser.Math.Between(100, 300);
-    const pipeY = pipeHeight + 100;
+    const screenWidth = game.scale.width;
+    const screenHeight = game.scale.height;
 
-    const upperPipe = pipes.create(config.width, pipeHeight, 'pipe').setScale(0.5);
-    upperPipe.setOrigin(0, 1);
+    const pipeHoleHeight = screenHeight * 0.25;
+    const minPipeHeight = screenHeight * 0.1;
+    const maxPipeHeight = screenHeight * 0.75 - pipeHoleHeight;
+    const pipeHeight = Phaser.Math.Between(minPipeHeight, maxPipeHeight);
+
+    const pipeWidth = screenWidth / 8;
+
+    const upperPipe = pipes.create(screenWidth, 0, 'pipe');
+    upperPipe.setOrigin(0, 0);
     upperPipe.body.allowGravity = false;
     upperPipe.setVelocityX(-200);
+    upperPipe.setDisplaySize(pipeWidth, pipeHeight);
 
-    const lowerPipe = pipes.create(config.width, pipeY, 'pipe').setScale(0.5);
+    const lowerPipeY = pipeHeight + pipeHoleHeight;
+    const lowerPipeHeight = screenHeight - lowerPipeY;
+    const lowerPipe = pipes.create(screenWidth, screenHeight, 'pipe');
+    lowerPipe.setOrigin(0, 1); // Set the origin to the bottom left corner
     lowerPipe.body.allowGravity = false;
     lowerPipe.setVelocityX(-200);
+    lowerPipe.setDisplaySize(pipeWidth, lowerPipeHeight);
 }
 
 function removeOffscreenPipes() {
