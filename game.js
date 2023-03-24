@@ -25,6 +25,8 @@ const game = new Phaser.Game(config);
 let bird;
 let pipes;
 let pipeTimer;
+let score = 0; // Added score variable
+let scoreText; // Added text object variable
 
 function preload() {
     this.load.image('bird', 'assets/bird.png');
@@ -43,6 +45,9 @@ function create() {
     });
 
     this.physics.add.collider(bird, pipes, gameOver, null, this);
+
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' }); // Added score display text
+    this.children.bringToTop(scoreText); // Bring the score text to the top
 }
 
 function update() {
@@ -50,6 +55,7 @@ function update() {
         gameOver.call(this);
     }
     removeOffscreenPipes();
+    incrementScore(); // Added score increment check
 }
 
 function addPipes() {
@@ -82,6 +88,18 @@ function removeOffscreenPipes() {
     pipes.children.each(pipe => {
         if (pipe.x < -pipe.displayWidth) {
             pipes.remove(pipe, true, true);
+        }
+    });
+}
+
+function incrementScore() {
+    pipes.children.each(pipe => {
+        // Check if the pipe is an upper pipe by comparing its origin
+        const isUpperPipe = pipe.originY === 0;
+        if (isUpperPipe && pipe.x + pipe.displayWidth < bird.x && !pipe.scored) {
+            pipe.scored = true;
+            score++;
+            scoreText.setText('score: ' + score);
         }
     });
 }
