@@ -109,4 +109,5 @@ function gameOver() {
     pipes.clear(true, true);
     bird.destroy();
     this.scene.restart();
+    score = 0; // Reset score
 }
