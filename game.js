@@ -41,7 +41,6 @@ function create() {
     bird.body.allowGravity = false; // Disable gravity initially
 
     pipes = this.physics.add.group();
-    
 
     this.input.on('pointerdown', () => {
         if (!gameStarted) {
@@ -56,11 +55,12 @@ function create() {
 
     this.physics.add.collider(bird, pipes, gameOver, null, this);
 
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    const fontSize = Math.round(Math.min(config.width, config.height) * 0.03); // Calculate the font size
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: fontSize + 'px', fill: '#000' });
     scoreText.setDepth(1);
 
     // Added startText
-    startText = this.add.text(config.width / 2, config.height / 2, 'Tap or click to start', { fontSize: '32px', fill: '#000' });
+    startText = this.add.text(config.width / 2, config.height / 2, 'Tap or click to start', { fontSize: fontSize * 1.5 + 'px', fill: '#000' });
     startText.setOrigin(0.5); // Center the startText
 }
 
