@@ -47,7 +47,7 @@ function create() {
     this.physics.add.collider(bird, pipes, gameOver, null, this);
 
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' }); // Added score display text
-    this.children.bringToTop(scoreText); // Bring the score text to the top
+    scoreText.setDepth(1); // Set the depth of the score text
 }
 
 function update() {
