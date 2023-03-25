@@ -118,7 +118,7 @@ function updateBirdRotation() {
 function addPipes() {
     const screenWidth = game.scale.width;
     const screenHeight = game.scale.height;
-    const pipeHoleHeight = screenHeight * 0.1;
+    const pipeHoleHeight = screenHeight * 0.2;
     const minPipeHeight = screenHeight * 0.1;
     const maxPipeHeight = screenHeight * 0.75 - pipeHoleHeight;
     const pipeHeight = Phaser.Math.Between(minPipeHeight, maxPipeHeight);
