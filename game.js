@@ -38,6 +38,9 @@ function create() {
     bird.setCollideWorldBounds(true);
 
     pipes = this.physics.add.group();
+    
+    addPipes.call(this); // Add initial pipes to the scene
+
     pipeTimer = this.time.addEvent({ delay: 2000, callback: addPipes, callbackScope: this, loop: true });
 
     this.input.on('pointerdown', () => {
@@ -49,6 +52,7 @@ function create() {
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' }); // Added score display text
     scoreText.setDepth(1); // Set the depth of the score text
 }
+
 
 function update() {
     if (bird.y < 0 || bird.y >= config.height - bird.displayHeight) {
