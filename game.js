@@ -25,8 +25,10 @@ const game = new Phaser.Game(config);
 let bird;
 let pipes;
 let pipeTimer;
-let score = 0; // Added score variable
-let scoreText; // Added text object variable
+let score = 0;
+let scoreText;
+let gameStarted = false; // Added gameStarted variable
+let startText; // Added startText variable
 
 function preload() {
     this.load.image('bird', 'assets/bird.png');
@@ -34,34 +36,45 @@ function preload() {
 }
 
 function create() {
-    bird = this.physics.add.sprite(100, 250, 'bird').setScale(1);
+    bird = this.physics.add.sprite(100, config.height / 2, 'bird').setScale(1);
     bird.setCollideWorldBounds(true);
+    bird.body.allowGravity = false; // Disable gravity initially
 
     pipes = this.physics.add.group();
     
-    addPipes.call(this); // Add initial pipes to the scene
-
-    pipeTimer = this.time.addEvent({ delay: 2000, callback: addPipes, callbackScope: this, loop: true });
 
     this.input.on('pointerdown', () => {
+        if (!gameStarted) {
+            gameStarted = true;
+            addPipes.call(this);
+            bird.body.allowGravity = true; // Enable gravity when the game starts
+            startText.setVisible(false); // Hide startText
+            pipeTimer = this.time.addEvent({ delay: 2000, callback: addPipes, callbackScope: this, loop: true }); // Start pipeTimer after the game starts
+        }
         bird.setVelocityY(-350);
     });
 
     this.physics.add.collider(bird, pipes, gameOver, null, this);
 
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' }); // Added score display text
-    scoreText.setDepth(1); // Set the depth of the score text
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText.setDepth(1);
+
+    // Added startText
+    startText = this.add.text(config.width / 2, config.height / 2, 'Tap or click to start', { fontSize: '32px', fill: '#000' });
+    startText.setOrigin(0.5); // Center the startText
 }
 
-
 function update() {
+    if (!gameStarted) {
+        return;
+    }
+
     if (bird.y < 0 || bird.y >= config.height - bird.displayHeight) {
         gameOver.call(this);
     }
     removeOffscreenPipes();
-    incrementScore(); // Added score increment check
+    incrementScore();
 
-    // Adjusted bird rotation
     const birdRotation = Phaser.Math.Clamp(bird.body.velocity.y / 1000, -0.15, 0.6);
     bird.setRotation(birdRotation * Math.PI);
 }
@@ -115,7 +128,12 @@ function incrementScore() {
 function gameOver() {
     pipeTimer.remove();
     pipes.clear(true, true);
-    bird.setActive(false); // Set bird to be inactive
-    score = 0; // Reset score
-    this.scene.restart();
+    bird.setActive(false);
+    bird.body.allowGravity = false; // Disable gravity after game over
+    bird.setY(config.height / 2); // Center the bird vertically after game over
+    bird.setVelocity(0, 0); // Reset bird's velocity
+    bird.setRotation(0); // Reset bird's rotation
+    score = 0;
+    gameStarted = false; // Reset gameStarted
+    startText.setVisible(true); // Show startText
 }
