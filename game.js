@@ -18,7 +18,10 @@ const config = {
 };
 
 window.addEventListener('resize', () => {
-    game.scale.resize(window.innerWidth, window.innerHeight);
+    const newWidth = window.innerWidth;
+    const newHeight = window.innerHeight;
+    game.scale.resize(newWidth, newHeight);
+    startText.setPosition(newWidth / 2, newHeight / 2); // Update startText position when the window is resized
 });
 
 const game = new Phaser.Game(config);
