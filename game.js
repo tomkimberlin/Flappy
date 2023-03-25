@@ -56,6 +56,10 @@ function update() {
     }
     removeOffscreenPipes();
     incrementScore(); // Added score increment check
+
+    // Adjusted bird rotation
+    const birdRotation = Phaser.Math.Clamp(bird.body.velocity.y / 1000, -0.15, 0.6);
+    bird.setRotation(birdRotation * Math.PI);
 }
 
 function addPipes() {
@@ -107,7 +111,7 @@ function incrementScore() {
 function gameOver() {
     pipeTimer.remove();
     pipes.clear(true, true);
-    bird.destroy();
-    this.scene.restart();
+    bird.setActive(false); // Set bird to be inactive
     score = 0; // Reset score
+    this.scene.restart();
 }
