@@ -55,7 +55,7 @@ function resizeGame() {
 
 function createScoreText() {
     const fontSize = Math.round(Math.min(config.width, config.height) * 0.03);
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: `${fontSize}px`, fill: '#000' });
+    scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: `${fontSize}px`, fill: '#000' });
     scoreText.setDepth(1);
 }
 
@@ -105,7 +105,7 @@ function incrementScore() {
         if (isUpperPipe && pipe.x + pipe.displayWidth < bird.x && !pipe.scored) {
             pipe.scored = true;
             score++;
-            scoreText.setText(`score: ${score}`);
+            scoreText.setText(`Score: ${score}`);
         }
     });
 }
@@ -118,22 +118,23 @@ function updateBirdRotation() {
 function addPipes() {
     const screenWidth = game.scale.width;
     const screenHeight = game.scale.height;
-    const pipeHoleHeight = screenHeight * 0.25;
+    const pipeHoleHeight = screenHeight * 0.1;
     const minPipeHeight = screenHeight * 0.1;
     const maxPipeHeight = screenHeight * 0.75 - pipeHoleHeight;
     const pipeHeight = Phaser.Math.Between(minPipeHeight, maxPipeHeight);
     const pipeWidth = screenWidth / 8;
-
-    createPipe(screenWidth, 0, pipeWidth, pipeHeight, 0, 0);
-    createPipe(screenWidth, screenHeight, pipeWidth, screenHeight - (pipeHeight + pipeHoleHeight), 0, 1);
+    const pipeSpeed = -350; // Decrease to increase speed of pipes
+    createPipe(screenWidth, 0, pipeWidth, pipeHeight, pipeSpeed);
+    createPipe(screenWidth, screenHeight, pipeWidth, screenHeight - pipeHeight - pipeHoleHeight, pipeSpeed);
 }
 
-function createPipe(x, y, width, height, originX, originY) {
+function createPipe(x, y, width, height, speed) {
     const pipe = pipes.create(x, y, 'pipe');
-    pipe.setOrigin(originX, originY);
+    pipe.setOrigin(0, y === 0 ? 0 : 1);
     pipe.body.allowGravity = false;
-    pipe.setVelocityX(-200);
+    pipe.setVelocityX(speed);
     pipe.setDisplaySize(width, height);
+    return pipe;
 }
 
 function startGame() {
@@ -141,7 +142,7 @@ function startGame() {
     bird.body.allowGravity = true;
     startText.setVisible(false);
     addPipes.call(this);
-    pipeTimer = this.time.addEvent({ delay: 2000, callback: addPipes, callbackScope: this, loop: true });
+    pipeTimer = this.time.addEvent({ delay: 1500, callback: addPipes, callbackScope: this, loop: true });
 }
 
 function gameOver() {
@@ -149,7 +150,7 @@ function gameOver() {
     pipes.clear(true, true);
     resetBird();
     score = 0;
-    scoreText.setText(`score: ${score}`);
+    scoreText.setText(`Score: ${score}`);
     gameStarted = false;
     startText.setVisible(true);
 }
