@@ -123,7 +123,7 @@ function addPipes() {
     const maxPipeHeight = screenHeight * 0.75 - pipeHoleHeight;
     const pipeHeight = Phaser.Math.Between(minPipeHeight, maxPipeHeight);
     const pipeWidth = screenWidth / 8;
-    const pipeSpeed = -350; // Decrease to increase speed of pipes
+    const pipeSpeed = -300; // Decrease to increase speed of pipes
     createPipe(screenWidth, 0, pipeWidth, pipeHeight, pipeSpeed);
     createPipe(screenWidth, screenHeight, pipeWidth, screenHeight - pipeHeight - pipeHoleHeight, pipeSpeed);
 }
