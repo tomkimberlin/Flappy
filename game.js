@@ -134,6 +134,7 @@ function gameOver() {
     bird.setVelocity(0, 0); // Reset bird's velocity
     bird.setRotation(0); // Reset bird's rotation
     score = 0;
+    scoreText.setText('score: ' + score); // Update score display text
     gameStarted = false; // Reset gameStarted
     startText.setVisible(true); // Show startText
 }
