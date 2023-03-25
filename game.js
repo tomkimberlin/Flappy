@@ -19,7 +19,7 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
-let bird, pipes, pipeTimer, score = 0, scoreText, gameStarted = false, startText;
+let bird, pipes, pipeTimer, score = 0, scoreText, highScore = 0, highScoreText, gameStarted = false, startText;
 
 window.addEventListener('resize', resizeGame);
 
@@ -30,6 +30,7 @@ function preload() {
 
 function create() {
     createScoreText.call(this);
+    createHighScoreText.call(this);
     createBird.call(this);
     pipes = this.physics.add.group();
     createInputListener.call(this);
@@ -58,6 +59,14 @@ function createScoreText() {
     const fontSize = Math.round(Math.min(config.width, config.height) * 0.03);
     scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: `${fontSize}px`, fill: '#000' });
     scoreText.setDepth(1);
+}
+
+function createHighScoreText() {
+    const fontSize = Math.round(Math.min(config.width, config.height) * 0.03);
+    highScore = localStorage.getItem('highScore') || 0; // Get the high score from localStorage, or default to 0
+    highScoreText = this.add.text(config.width - 16, 16, `High Score: ${highScore}`, { fontSize: `${fontSize}px`, fill: '#000' });
+    highScoreText.setOrigin(1, 0);
+    highScoreText.setDepth(1);
 }
 
 function createBird() {
@@ -149,6 +158,11 @@ function startGame() {
 function gameOver() {
     pipeTimer.remove();
     pipes.clear(true, true);
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+        highScoreText.setText(`High Score: ${highScore}`);
+    }
     resetBird();
     score = 0;
     scoreText.setText(`Score: ${score}`);
