@@ -39,7 +39,12 @@ function preload() {
 }
 
 function create() {
-    bird = this.physics.add.sprite(100, config.height / 2, 'bird').setScale(1);
+    const fontSize = Math.round(Math.min(config.width, config.height) * 0.03); // Calculate the font size
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: fontSize + 'px', fill: '#000' });
+    scoreText.setDepth(1);
+
+    const birdStartingOffset = 40; // You can adjust this value to change the bird's starting position
+    bird = this.physics.add.sprite(birdStartingOffset, config.height / 2, 'bird').setScale(1);
     bird.setCollideWorldBounds(true);
     bird.body.allowGravity = false; // Disable gravity initially
 
@@ -57,10 +62,6 @@ function create() {
     });
 
     this.physics.add.collider(bird, pipes, gameOver, null, this);
-
-    const fontSize = Math.round(Math.min(config.width, config.height) * 0.03); // Calculate the font size
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: fontSize + 'px', fill: '#000' });
-    scoreText.setDepth(1);
 
     // Added startText
     startText = this.add.text(config.width / 2, config.height / 2, 'Tap or click to start', { fontSize: fontSize * 1.5 + 'px', fill: '#000' });
